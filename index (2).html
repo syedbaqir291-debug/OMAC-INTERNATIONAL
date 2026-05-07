@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OMAC International (Pakistan) — Quality Tools Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Syne:wght@300;400;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --bg: #020408;
+    --bg2: #0a0f1a;
+    --bg3: #0f1624;
+    --card-bg: rgba(10,18,35,0.85);
+    --card-border: rgba(0,229,255,0.15);
+    --card-hover-border: rgba(0,229,255,0.6);
+    --text: #e8f4f8;
+    --text-muted: rgba(200,220,235,0.55);
+    --text-dim: rgba(180,210,230,0.35);
+    --glow: 0 0 30px rgba(0,229,255,0.18), 0 0 80px rgba(0,229,255,0.06);
+    --glow-strong: 0 0 20px rgba(0,229,255,0.4), 0 0 60px rgba(0,229,255,0.15);
+    --badge-bg: rgba(0,229,255,0.1);
+    --badge-text: #00e5ff;
+    --grid-line: rgba(0,229,255,0.04);
+    --shadow: 0 8px 40px rgba(0,0,0,0.6), 0 2px 12px rgba(0,0,0,0.4);
+  }
+  [data-theme="light"] {
+    --accent: #0070cc;
+    --accent2: #6d28d9;
+    --accent3: #059669;
+    --bg: #f0f4f8;
+    --bg2: #e4ecf5;
+    --bg3: #ffffff;
+    --card-bg: rgba(255,255,255,0.9);
+    --card-border: rgba(0,112,204,0.18);
+    --card-hover-border: rgba(0,112,204,0.6);
+    --text: #0a1628;
+    --text-muted: rgba(15,30,60,0.55);
+    --text-dim: rgba(15,30,60,0.35);
+    --glow: 0 4px 24px rgba(0,112,204,0.12), 0 1px 6px rgba(0,112,204,0.06);
+    --glow-strong: 0 4px 20px rgba(0,112,204,0.3), 0 8px 40px rgba(0,112,204,0.1);
+    --badge-bg: rgba(0,112,204,0.1);
+    --badge-text: #0055aa;
+    --grid-line: rgba(0,80,180,0.05);
+    --shadow: 0 8px 40px rgba(0,0,0,0.1), 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s ease, color 0.4s ease;
+  }
+
+  /* === GRID BACKGROUND === */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+    transition: background-image 0.4s ease;
+  }
+
+  /* === AMBIENT GLOW ORBS === */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    z-index: 0;
+    transition: opacity 0.4s ease;
+  }
+  .orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
+    top: -100px; left: -100px;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(124,58,237,0.1) 0%, transparent 70%);
+    bottom: 10%; right: -100px;
+  }
+  .orb-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  [data-theme="light"] .orb-1 { background: radial-gradient(circle, rgba(0,112,204,0.08) 0%, transparent 70%); }
+  [data-theme="light"] .orb-2 { background: radial-gradient(circle, rgba(109,40,217,0.07) 0%, transparent 70%); }
+  [data-theme="light"] .orb-3 { background: radial-gradient(circle, rgba(5,150,105,0.06) 0%, transparent 70%); }
+
+  /* === THEME TOGGLE === */
+  .theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+  .theme-capsule {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    padding: 6px 16px 6px 10px;
+    cursor: pointer;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    box-shadow: var(--glow);
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .theme-capsule:hover {
+    border-color: var(--card-hover-border);
+    box-shadow: var(--glow-strong);
+    transform: scale(1.03);
+  }
+  .capsule-brand {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--text);
+    opacity: 0.85;
+  }
+  .capsule-divider {
+    width: 1px;
+    height: 14px;
+    background: var(--card-hover-border);
+  }
+  .toggle-icon {
+    font-size: 16px;
+    transition: transform 0.4s ease;
+    flex-shrink: 0;
+  }
+  .theme-capsule:hover .toggle-icon { transform: rotate(20deg); }
+
+  /* === MAIN WRAPPER === */
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* === HEADER === */
+  header {
+    text-align: center;
+    padding: 90px 20px 60px;
+    position: relative;
+  }
+  .header-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    opacity: 0.8;
+    margin-bottom: 20px;
+    animation: fadeDown 0.6s ease both;
+  }
+  .eyebrow-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .header-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(28px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    animation: fadeDown 0.7s ease 0.1s both;
+    margin-bottom: 6px;
+  }
+  .header-title span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  [data-theme="light"] .header-title span {
+    background: linear-gradient(135deg, #0055aa, #5b21b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .header-country {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(10px, 1.5vw, 14px);
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    animation: fadeDown 0.7s ease 0.15s both;
+    margin-bottom: 18px;
+  }
+
+  .header-tagline {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(13px, 1.8vw, 17px);
+    font-weight: 300;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    animation: fadeDown 0.7s ease 0.25s both;
+    font-style: italic;
+  }
+  .header-tagline em {
+    font-style: normal;
+    color: var(--accent3);
+    font-weight: 600;
+  }
+
+  .header-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    margin: 28px auto 0;
+    animation: fadeDown 0.7s ease 0.35s both;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === SECTION LABEL === */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+  .section-label-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .section-label-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--card-border), transparent);
+  }
+  .section-label-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.7;
+  }
+
+  /* === TOOLS GRID === */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+    animation: fadeUp 0.6s ease 0.5s both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === TOOL CARD === */
+  .tool-card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1),
+                border-color 0.3s ease,
+                box-shadow 0.35s ease;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow);
+    animation: cardIn 0.5s ease both;
+  }
+  .tool-card:hover {
+    transform: translateY(-6px) scale(1.025);
+    border-color: var(--card-hover-border);
+    box-shadow: var(--glow-strong), var(--shadow);
+  }
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    border-radius: 16px;
+  }
+  .tool-card:hover::before { opacity: 1; }
+  [data-theme="light"] .tool-card::before {
+    background: linear-gradient(135deg, rgba(0,112,204,0.04) 0%, transparent 50%);
+  }
+
+  /* Top accent line */
+  .tool-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .tool-card:hover::after { opacity: 1; }
+
+  /* === THUMBNAIL === */
+  .card-thumb {
+    position: relative;
+    height: 170px;
+    overflow: hidden;
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  [data-theme="light"] .card-thumb { background: var(--bg2); }
+
+  .card-thumb-icon {
+    font-size: 56px;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 12px var(--accent));
+  }
+  .tool-card:hover .card-thumb-icon {
+    transform: scale(1.22) rotate(-4deg);
+  }
+
+  .card-thumb-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0.12;
+    transition: opacity 0.3s ease;
+  }
+  .tool-card:hover .card-thumb-bg { opacity: 0.22; }
+
+  .card-thumb-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--badge-text);
+    background: var(--badge-bg);
+    border: 1px solid rgba(0,229,255,0.25);
+    border-radius: 999px;
+    padding: 3px 10px;
+    backdrop-filter: blur(10px);
+  }
+  [data-theme="light"] .card-thumb-badge {
+    border-color: rgba(0,112,204,0.25);
+  }
+
+  /* === CARD BODY === */
+  .card-body {
+    padding: 20px 22px 22px;
+  }
+  .card-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  .card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+  }
+  .tool-card:hover .card-title { color: var(--accent); }
+  [data-theme="light"] .tool-card:hover .card-title { color: var(--accent); }
+
+  .card-desc {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.65;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.35s ease, opacity 0.3s ease 0.05s, margin 0.3s ease;
+    margin-bottom: 0;
+  }
+  .tool-card:hover .card-desc {
+    max-height: 120px;
+    opacity: 1;
+    margin-bottom: 14px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .card-cta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: gap 0.2s ease;
+  }
+  .tool-card:hover .card-cta { gap: 10px; }
+  .card-cta-arrow {
+    font-size: 14px;
+    transition: transform 0.2s ease;
+  }
+  .tool-card:hover .card-cta-arrow { transform: translateX(4px); }
+
+  .card-stars {
+    display: flex;
+    gap: 3px;
+  }
+  .star { font-size: 10px; color: var(--accent); opacity: 0.7; }
+
+  /* GitHub badge */
+  .github-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    padding: 4px 12px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+  }
+  .github-badge:hover {
+    border-color: var(--card-hover-border);
+    color: var(--accent);
+  }
+  .github-badge svg { width: 13px; height: 13px; fill: currentColor; }
+
+  /* === CARD ANIMATIONS === */
+  .tool-card:nth-child(1) { animation-delay: 0.1s; }
+  .tool-card:nth-child(2) { animation-delay: 0.18s; }
+  .tool-card:nth-child(3) { animation-delay: 0.26s; }
+  .tool-card:nth-child(4) { animation-delay: 0.34s; }
+  .tool-card:nth-child(5) { animation-delay: 0.42s; }
+  .tool-card:nth-child(6) { animation-delay: 0.5s; }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === FOOTER === */
+  footer {
+    text-align: center;
+    padding: 48px 20px 24px;
+    position: relative;
+    z-index: 1;
+  }
+  .footer-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+    margin-bottom: 24px;
+  }
+  .footer-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .footer-text span { color: var(--accent); opacity: 0.8; }
+
+  /* === SCAN LINE EFFECT === */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.015) 2px,
+      rgba(0,0,0,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    transition: opacity 0.4s ease;
+  }
+  [data-theme="light"] body::after { opacity: 0.3; }
+
+  /* === MOBILE === */
+  @media (max-width: 640px) {
+    .wrapper { padding: 0 14px 60px; }
+    header { padding: 80px 10px 40px; }
+    .tools-grid { grid-template-columns: 1fr; gap: 16px; }
+    .theme-capsule { padding: 6px 12px 6px 8px; }
+    .capsule-brand { display: none; }
+    .capsule-divider { display: none; }
+  }
+  @media (max-width: 380px) {
+    .theme-toggle { top: 12px; right: 12px; }
+  }
+
+  /* === NO TOOLS PLACEHOLDER === */
+  .no-tools {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    border: 1px dashed var(--card-border);
+    border-radius: 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- AMBIENT ORBS -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- THEME TOGGLE -->
+<div class="theme-toggle">
+  <button class="theme-capsule" onclick="toggleTheme()" aria-label="Toggle theme">
+    <span class="toggle-icon" id="themeIcon">🌙</span>
+    <span class="capsule-divider"></span>
+    <span class="capsule-brand">OMAC Analytics</span>
+  </button>
+</div>
+
+<div class="wrapper">
+  <!-- HEADER -->
+  <header>
+    <div class="header-eyebrow">
+      <span class="eyebrow-dot"></span>
+      Quality Intelligence Platform
+      <span class="eyebrow-dot"></span>
+    </div>
+    <h1 class="header-title">OMAC <span>International</span></h1>
+    <p class="header-country">Pakistan</p>
+    <p class="header-tagline">Together we reached the <em>goal</em></p>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- TOOLS SECTION -->
+  <div class="section-label">
+    <span class="section-label-text">Quality Tools</span>
+    <span class="section-label-line"></span>
+    <span class="section-label-count" id="toolCount">01 tool</span>
+  </div>
+
+  <!-- GRID — Add more .tool-card blocks here for new tools -->
+  <div class="tools-grid" id="toolsGrid">
+
+    <!-- ============================================================
+         TOOL CARD 1 — Duplicate this block to add more tools
+         ============================================================ -->
+    <a class="tool-card"
+       href="https://your-tool-link.com"
+       target="_blank"
+       rel="noopener noreferrer"
+       data-category="Quality Control"
+       data-title="Quality Analyzer Pro"
+       data-badge="Active">
+
+      <!-- THUMBNAIL -->
+      <div class="card-thumb">
+        <svg class="card-thumb-bg" viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <radialGradient id="g1" cx="50%" cy="50%">
+              <stop offset="0%" stop-color="#00e5ff" /><stop offset="100%" stop-color="transparent" />
+            </radialGradient>
+          </defs>
+          <circle cx="150" cy="85" r="120" fill="url(#g1)" />
+          <circle cx="150" cy="85" r="60" fill="none" stroke="#00e5ff" stroke-width="0.5" stroke-dasharray="4 6"/>
+          <circle cx="150" cy="85" r="90" fill="none" stroke="#00e5ff" stroke-width="0.3" stroke-dasharray="2 8"/>
+        </svg>
+        <span class="card-thumb-icon">🎯</span>
+        <span class="card-thumb-badge">Active</span>
+      </div>
+
+      <!-- CARD BODY -->
+      <div class="card-body">
+        <div class="card-tag">Quality Control</div>
+        <div class="card-title">Quality Analyzer Pro</div>
+        <div class="card-desc">
+          A comprehensive quality analysis tool for inspecting, measuring, and reporting on production quality metrics. Built for precision with real-time dashboard insights.
+        </div>
+        <div class="card-footer">
+          <span class="card-cta">
+            Open Tool <span class="card-cta-arrow">→</span>
+          </span>
+          <div class="card-stars">
+            <span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- ============================================================
+         ADD MORE TOOL CARDS BELOW — Copy the block above
+         and update: href, data-category, data-title, data-badge,
+         the emoji in card-thumb-icon, and the description text.
+         ============================================================ -->
+
+  </div><!-- /tools-grid -->
+</div><!-- /wrapper -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-line"></div>
+  <p class="footer-text">© 2025 <span>OMAC International</span> · Pakistan · All Rights Reserved</p>
+</footer>
+
+<script>
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    document.getElementById('themeIcon').textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('omac-theme', isDark ? 'light' : 'dark');
+  }
+
+  (function() {
+    const saved = localStorage.getItem('omac-theme');
+    if (saved) {
+      document.documentElement.setAttribute('data-theme', saved);
+      document.getElementById('themeIcon').textContent = saved === 'dark' ? '🌙' : '☀️';
+    }
+  })();
+
+  // Auto-update tool count
+  (function() {
+    const cards = document.querySelectorAll('#toolsGrid .tool-card');
+    const n = cards.length;
+    const label = n === 1 ? '01 tool' : String(n).padStart(2,'0') + ' tools';
+    document.getElementById('toolCount').textContent = label;
+  })();
+</script>
+</body>
+</html>
